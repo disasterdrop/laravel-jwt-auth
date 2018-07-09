@@ -87,21 +87,25 @@ class JwtUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $response = $this->client->post('api/login', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode([
-                'username' => $credentials['email'],
-                'password' => $credentials['password']
-            ])
-        ]);
+        try {
+            $response = $this->client->post('api/login', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ],
+                'body' => json_encode([
+                    'username' => $credentials['email'],
+                    'password' => $credentials['password']
+                ])
+            ]);
 
-        $body = json_decode((string)$response->getBody());
-        $payload = $this->getPayload($body->access_token);
+            $body = json_decode((string)$response->getBody());
+            $payload = $this->getPayload($body->access_token);
 
-        return new JwtUser((array)$payload->data, $body->access_token, $body->refresh_token);
+            return new JwtUser((array)$payload->data, $body->access_token, $body->refresh_token);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
