@@ -29,8 +29,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($path, 'jwt');
 
         Auth::provider('jwt', function ($app, array $config) {
-            $client = new Client(['base_uri' => 'https://test-auth.musterhaus.net']);
-            $publicKey = Storage::get(config('jwt-auth.public_key'));
+            $client = new Client(['base_uri' => config('jwt.auth_server')]);
+            $publicKey = Storage::get(config('jwt.public_key'));
 
             return new JwtUserProvider($client, $publicKey);
         });

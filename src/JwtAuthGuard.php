@@ -55,8 +55,8 @@ class JwtAuthGuard implements Guard
             if ($user instanceof JwtUser) {
                 $this->user = $user;
                 $num_of_minutes_until_expire = 60 * 24 * 7; // one week
-                Cookie::queue('jwt_token', $user->getAccessToken(), $num_of_minutes_until_expire, null, config('jwt-auth.cookie_domain'));
-                Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $num_of_minutes_until_expire, null, config('jwt-auth.cookie_domain'));
+                Cookie::queue('jwt_token', $user->getAccessToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
+                Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
 
                 return $this->user;
             }
