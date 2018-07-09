@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Musterhaus\LaravelJWTAuth\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 
 /**
  * Class LoginController
@@ -78,10 +77,7 @@ class LoginController extends BaseController
      */
     protected function authenticated(Request $request, $user, $token)
     {
-        $num_of_minutes_until_expire = 60 * 24 * 7; // one week
-
-        Cookie::queue('jwt_token', $user->getAccessToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
-        Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
+        jwt_auth_set_cookies($user->getAccessToken(), $user->getRefrshToken());
     }
 
     /**
@@ -104,8 +100,7 @@ class LoginController extends BaseController
     {
         $this->guard()->logout();
 
-        Cookie::queue('jwt_token', '', 0, null, config('jwt.cookie_domain'));
-        Cookie::queue('jwt_refresh_token', '', 0, null, config('jwt.cookie_domain'));
+        jwt_auth_remove_cookies();
 
         return redirect('/')
             ->withCookie("jwt_token")
