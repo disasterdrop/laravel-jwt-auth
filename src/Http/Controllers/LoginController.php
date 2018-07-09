@@ -77,7 +77,7 @@ class LoginController extends BaseController
      */
     protected function authenticated(Request $request, $user, $token)
     {
-        jwt_auth_set_cookies($user->getAccessToken(), $user->getRefrshToken());
+        jwt_auth_set_cookies($user->getAccessToken(), $user->getRefreshToken());
     }
 
     /**
