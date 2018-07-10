@@ -8,33 +8,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * Class User
  * @package Musterhaus\LaravelJWTAuth
  */
-class User implements Authenticatable
+abstract class User implements Authenticatable, \ArrayAccess
 {
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $email;
-
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $role;
-
-    /**
-     * @var array
-     */
-    public $services = [];
 
     /**
      * @var
@@ -47,6 +22,11 @@ class User implements Authenticatable
     private $refreshToken;
 
     /**
+     * @var array
+     */
+    private $data = [];
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -55,14 +35,9 @@ class User implements Authenticatable
      */
     public function __construct(array $data, $accessToken, $refreshToken = null)
     {
+        $this->data = $data;
         $this->accessToken = $accessToken;
         $this->refreshToken = $refreshToken;
-
-        $this->id = $data['id'];
-        $this->name = $data['name'];
-        $this->email = $data['email'];
-        $this->role = $data['role'];
-        $this->services = $data['services'];
     }
 
     /**
@@ -81,34 +56,38 @@ class User implements Authenticatable
         return $this->refreshToken;
     }
 
-    public function getAuthIdentifierName()
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
     {
-        // TODO: Implement getAuthIdentifierName() method.
+        return isset($data[$offset]);
     }
 
-    public function getAuthIdentifier()
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
     {
-        // TODO: Implement getAuthIdentifier() method.
+        if ($this->offsetExists($offset)) {
+            return $this->data[$offset];
+        }
     }
 
-    public function getAuthPassword()
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
     {
-        // TODO: Implement getAuthPassword() method.
+        $this->data[$offset] = $value;
     }
 
-    public function getRememberToken()
+    public function offsetUnset($offset)
     {
-        // TODO: Implement getRememberToken() method.
-    }
-
-    public function setRememberToken($value)
-    {
-        // TODO: Implement setRememberToken() method.
-    }
-
-    public function getRememberTokenName()
-    {
-        // TODO: Implement getRememberTokenName() method.
+        unset($this->data[$offset]);
     }
 
 }

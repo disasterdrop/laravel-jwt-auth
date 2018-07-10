@@ -13,8 +13,14 @@ use Illuminate\Contracts\Auth\UserProvider as LaravelUserProvider;
 class UserProvider implements LaravelUserProvider
 {
 
+    /**
+     * @var Repository
+     */
     private $repository;
 
+    /**
+     * @var string
+     */
     private $publicKey;
 
     /**
@@ -46,26 +52,35 @@ class UserProvider implements LaravelUserProvider
 
     /**
      * @param mixed $identifier
-     * @return User|Authenticatable|null
+     * @return Authenticatable|User|null
      */
     public function retrieveById($identifier)
     {
         $payload = $this->getPayload($identifier);
-        return new User((array)$payload->data, $identifier);
+        return $this->repository->createUser((array)$payload->data, $identifier);
     }
 
+    /**
+     * @param mixed $identifier
+     * @param string $token
+     * @return Authenticatable|User|null
+     */
     public function retrieveByToken($identifier, $token)
     {
         try {
             $data = $this->repository->retrieveByToken($identifier, $token);
             $payload = $this->getPayload($data['access_token']);
 
-            return new User((array)$payload->data, $data['access_token'], $data['refresh_token']);
+            return $this->repository->createUser((array)$payload->data, $data['access_token'], $data['refresh_token']);
         } catch (\Exception $e) {
             return null;
         }
     }
 
+    /**
+     * @param Authenticatable $user
+     * @param string $token
+     */
     public function updateRememberToken(Authenticatable $user, $token)
     {
         // TODO: Implement updateRememberToken() method.
@@ -81,7 +96,7 @@ class UserProvider implements LaravelUserProvider
             $data = $this->repository->retrieveByCredentials($credentials);
             $payload = $this->getPayload($data['access_token']);
 
-            return new User((array)$payload->data, $data['access_token'], $data['refresh_token']);
+            return $this->repository->createUser((array)$payload->data, $data['access_token'], $data['refresh_token']);
         } catch (\Exception $e) {
             return null;
         }
