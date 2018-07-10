@@ -60,7 +60,7 @@ class AuthService
         $user = $this->provider->findUserByIdentifier($refreshToken->getUserIdentifier());
 
         // remove used refresh token
-        $this->provider->removeOldRefreshTokensForUser();
+        $this->provider->removeOldRefreshTokensForUser($user);
 
         return $user;
     }
