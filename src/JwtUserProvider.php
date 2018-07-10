@@ -57,7 +57,7 @@ class JwtUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         try {
-            $response = $this->client->post('api/refresh', [
+            $response = $this->client->post('api/jwt/refresh', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json'
@@ -88,7 +88,7 @@ class JwtUserProvider implements UserProvider
     public function retrieveByCredentials(array $credentials)
     {
         try {
-            $response = $this->client->post('api/login', [
+            $response = $this->client->post('api/jwt/login', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json'
