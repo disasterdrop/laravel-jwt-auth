@@ -14,17 +14,17 @@ abstract class User implements Authenticatable, \ArrayAccess
     /**
      * @var
      */
-    private $accessToken;
+    protected $accessToken;
 
     /**
      * @var null
      */
-    private $refreshToken;
+    protected $refreshToken;
 
     /**
      * @var array
      */
-    private $data = [];
+    protected $data = [];
 
     /**
      * User constructor.
@@ -62,7 +62,7 @@ abstract class User implements Authenticatable, \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return isset($data[$offset]);
+        return isset($this->data[$offset]);
     }
 
     /**
