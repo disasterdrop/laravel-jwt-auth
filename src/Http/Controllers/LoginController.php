@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class LoginController extends BaseController
 {
 
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthenticatesUsers, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /*
     |--------------------------------------------------------------------------
@@ -28,8 +28,6 @@ class LoginController extends BaseController
     | to conveniently provide its functionality to your applications.
     |
     */
-
-    use AuthenticatesUsers;
 
     /**
      * Create a new controller instance.

@@ -7,24 +7,69 @@ namespace Musterhaus\LaravelJWTAuth\Server;
  *
  * @package Musterhaus\LaravelJWTAuth\Server
  */
-class RefreshToken
+class RefreshToken implements Token
 {
 
-    protected $revoked = false;
-    protected $refreshToken;
-    protected $expires;
+    /**
+     * @var bool
+     */
+    private $revoked = false;
+
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $expires;
+
+    /**
+     * @var User
+     */
+    private $user;
 
     /**
      * RefreshToken constructor.
-     *
      * @param User $user
      * @param string $expires
      * @throws \Exception
      */
-    public function __construct(string $expires = '+1 year')
+    public function __construct(User $user, string $expires = '+1 year')
     {
-        $this->refresh_token = $this->generateAccessToken();
+        $this->token = $this->generateAccessToken();
         $this->expires = $this->generateExpires($expires);
+        $this->setUser($user);
+    }
+
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRevokable(): bool
+    {
+        return (!$this->isRevoked());
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdentifier()
+    {
+        return $this->user->getIdentifier();
     }
 
     /**

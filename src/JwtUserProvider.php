@@ -21,9 +21,9 @@ class JwtUserProvider implements UserProvider
     /**
      * JwtUserProvider constructor.
      * @param Client $client
-     * @param $publicKey
+     * @param string $publicKey
      */
-    public function __construct(Client $client, $publicKey)
+    public function __construct(Client $client, string $publicKey)
     {
         $this->client = $client;
         $this->publicKey = $publicKey;

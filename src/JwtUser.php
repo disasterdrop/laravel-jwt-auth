@@ -11,16 +11,39 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class JwtUser implements Authenticatable
 {
 
+    /**
+     * @var string
+     */
     public $name;
 
+    /**
+     * @var string
+     */
     public $email;
 
+    /**
+     * @var string
+     */
     public $id;
 
+    /**
+     * @var string
+     */
     public $role;
 
+    /**
+     * @var array
+     */
+    public $services = [];
+
+    /**
+     * @var
+     */
     private $accessToken;
 
+    /**
+     * @var null
+     */
     private $refreshToken;
 
     /**
@@ -37,6 +60,7 @@ class JwtUser implements Authenticatable
         $this->name = $data['username'];
         $this->email = $data['email'];
         $this->role = $data['role'];
+        $this->services = $data['services'];
     }
 
     /**
