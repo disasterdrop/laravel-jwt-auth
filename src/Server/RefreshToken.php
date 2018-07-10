@@ -64,7 +64,8 @@ class RefreshToken implements Token
         $this->user = $user;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 
@@ -101,6 +102,14 @@ class RefreshToken implements Token
     public function expiresAt(string $format = 'Y-m-d H:i:s'): string
     {
         return $this->expires->format($format);
+    }
+
+    /**
+     * @return int
+     */
+    public function expiresAsTimestamp()
+    {
+        return $this->expires->getTimestamp();
     }
 
     /**
