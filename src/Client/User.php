@@ -59,7 +59,7 @@ class User implements Authenticatable
         $this->refreshToken = $refreshToken;
 
         $this->id = $data['id'];
-        $this->name = $data['username'];
+        $this->name = $data['name'];
         $this->email = $data['email'];
         $this->role = $data['role'];
         $this->services = $data['services'];
