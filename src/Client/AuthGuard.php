@@ -62,6 +62,8 @@ class AuthGuard implements Guard
                 return $this->user;
             }
         }
+
+        return null;
     }
 
     public function viaRemember()
