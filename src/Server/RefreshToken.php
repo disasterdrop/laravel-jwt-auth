@@ -64,6 +64,10 @@ class RefreshToken implements Token
         $this->user = $user;
     }
 
+    public function getUser() {
+        return $this->user;
+    }
+
     /**
      * @return string
      */
