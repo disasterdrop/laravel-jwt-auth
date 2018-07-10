@@ -1,14 +1,14 @@
 <?php
 
-namespace Musterhaus\LaravelJWTAuth;
+namespace Musterhaus\LaravelJWTAuth\Client;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
- * Class JwtUser
+ * Class User
  * @package Musterhaus\LaravelJWTAuth
  */
-class JwtUser implements Authenticatable
+class User implements Authenticatable
 {
 
     /**
@@ -47,7 +47,9 @@ class JwtUser implements Authenticatable
     private $refreshToken;
 
     /**
-     * JwtUser constructor.
+     * User constructor.
+     *
+     * @param array $data
      * @param $accessToken
      * @param null $refreshToken
      */

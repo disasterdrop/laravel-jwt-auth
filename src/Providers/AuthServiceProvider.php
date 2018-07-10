@@ -2,10 +2,10 @@
 
 namespace Musterhaus\LaravelJWTAuth\Providers;
 
-use Musterhaus\LaravelJWTAuth\JwtAuthGuard;
-use Musterhaus\LaravelJWTAuth\JwtUserProvider;
+use Musterhaus\LaravelJWTAuth\Client\AuthGuard;
+use Musterhaus\LaravelJWTAuth\Client\Repository;
+use Musterhaus\LaravelJWTAuth\Client\UserProvider;
 use Illuminate\Support\ServiceProvider;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,14 +33,13 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         Auth::provider('jwt', function ($app, array $config) {
-            $client = new Client(['base_uri' => config('jwt.auth_server')]);
             $publicKey = Storage::get(config('jwt.public_key'));
 
-            return new JwtUserProvider($client, $publicKey);
+            return new UserProvider($app->make(Repository::class), $publicKey);
         });
 
         Auth::extend('jwt', function ($app, $name, array $config) {
-            return new JwtAuthGuard(
+            return new AuthGuard(
                 $app['auth']->createUserProvider($config['provider']),
                 $app['request']
             );

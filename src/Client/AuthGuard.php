@@ -1,6 +1,6 @@
 <?php
 
-namespace Musterhaus\LaravelJWTAuth;
+namespace Musterhaus\LaravelJWTAuth\Client;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
 /**
- * Class JwtAuthGuard
+ * Class AuthGuard
  * @package Musterhaus\LaravelJWTAuth
  */
-class JwtAuthGuard implements Guard
+class AuthGuard implements Guard
 {
 
     use GuardHelpers;
@@ -24,7 +24,7 @@ class JwtAuthGuard implements Guard
     protected $request;
 
     /**
-     * JwtAuthGuard constructor.
+     * AuthGuard constructor.
      * @param UserProvider $provider
      * @param Request $request
      */
@@ -52,8 +52,9 @@ class JwtAuthGuard implements Guard
             $refreshToken = Cookie::get('jwt_refresh_token');
             $user = $this->provider->retrieveByToken($token, $refreshToken);
 
-            if ($user instanceof JwtUser) {
+            if ($user instanceof User) {
                 $this->user = $user;
+
                 $num_of_minutes_until_expire = 60 * 24 * 7; // one week
                 Cookie::queue('jwt_token', $user->getAccessToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
                 Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
@@ -146,9 +147,9 @@ class JwtAuthGuard implements Guard
      * Create a token for a user.
      *
      * @return string
-     * @param JwtUser $user
+     * @param User $user
      */
-    public function login(JwtUser $user)
+    public function login(User $user)
     {
         return $user->getAccessToken();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Musterhaus\LaravelJWTAuth\Http\Controllers;
+namespace Musterhaus\LaravelJWTAuth\Client\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;

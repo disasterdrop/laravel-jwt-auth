@@ -1,6 +1,6 @@
 <?php
 
-namespace Musterhaus\LaravelJWTAuth\Http\Middleware;
+namespace Musterhaus\LaravelJWTAuth\Client\Http\Middleware;
 
 use Closure;
 
