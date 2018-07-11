@@ -137,4 +137,17 @@ class LoginController extends BaseController
 
     }
 
+    public function redirectPath()
+    {
+        if (request()->has('redirect_uri')) {
+            return redirect()->to(request()->get('redirect_uri'));
+        }
+
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+    }
+
 }
