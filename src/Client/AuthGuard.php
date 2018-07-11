@@ -48,6 +48,13 @@ class AuthGuard implements Guard
             return $this->user = $this->provider->retrieveById($token);
         }
 
+        if (Cookie::has('jwt_token')) {
+            $token = Cookie::get('jwt_token');
+            if (!empty($token) && $this->provider->getPayload($token)) {
+                return $this->user = $this->provider->retrieveById($token);
+            }
+        }
+
         if (Cookie::has('jwt_refresh_token')) {
             $refreshToken = Cookie::get('jwt_refresh_token');
             $user = $this->provider->retrieveByToken($token, $refreshToken);
