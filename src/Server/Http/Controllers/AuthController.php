@@ -3,6 +3,7 @@
 namespace Musterhaus\LaravelJWTAuth\Server\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Musterhaus\LaravelJWTAuth\Exceptions\LoginFailedException;
 use Musterhaus\LaravelJWTAuth\Server\AuthService;
 use Musterhaus\LaravelJWTAuth\Server\Http\Requests\Login;
 use Musterhaus\LaravelJWTAuth\Server\Http\Requests\Refresh;
@@ -32,14 +33,21 @@ class AuthController extends BaseController
      * @param Login $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Login $request)
+    public function authorize(Login $request)
     {
         $validated = $request->validated();
+        $redirectUri = $request->get('redirect_uri');
 
         try {
             $user = $this->authService->validateUser($validated['username'], $validated['password']);
 
-            return response()->json($this->authService->generateAccessTokens($user));
+            $accessTokens = $this->authService->generateAccessTokens($user);
+
+            if ($request->wantsJson() || empty($redirectUri)) {
+                return response()->json($accessTokens);
+            } else {
+                return redirect()->to($redirectUri)->with('token', $accessTokens);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
@@ -125,6 +133,17 @@ class AuthController extends BaseController
     public function test()
     {
         return response()->json(['timestamp' => time()]);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRefererHost()
+    {
+        $referrer = request()->server('HTTP_REFERER');
+        $host = parse_url($referrer, PHP_URL_HOST);
+
+        return $host;
     }
 
 }

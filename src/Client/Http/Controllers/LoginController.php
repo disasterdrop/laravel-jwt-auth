@@ -17,17 +17,12 @@ use Illuminate\Validation\ValidationException;
 class LoginController extends BaseController
 {
 
-    use AuthenticatesUsers, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /*
     |--------------------------------------------------------------------------
     | Login Controller
     |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
     */
 
     /**
@@ -41,18 +36,13 @@ class LoginController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function showLoginForm()
     {
-        $credentials = $request->only(["email", "password"]);
-        if ($token = $this->guard()->attempt($credentials, true)) {
-            return $this->sendLoginResponse($request, $token);
-        }
-
-        $this->incrementLoginAttempts($request);
-        return $this->sendFailedLoginResponse($request);
+        return view('auth.login');
     }
 
     /**
@@ -104,6 +94,22 @@ class LoginController extends BaseController
         return redirect('/')
             ->withCookie("jwt_token")
             ->withCookie("jwt_refresh_token");
+    }
+
+    public function callback(Request $request)
+    {
+        var_dump($request->all());
+        exit;
+    }
+
+    public function password()
+    {
+
+    }
+
+    public function showPasswordForm()
+    {
+
     }
 
 }
