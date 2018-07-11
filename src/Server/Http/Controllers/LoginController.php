@@ -43,9 +43,11 @@ class LoginController extends BaseController
         $this->middleware('guest')->except('logout');
     }
 
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
-        return view('jwt::login');
+        $redirectUri = $request->get('redirect_uri');
+
+        return view('jwt::login', ['redirect_uri' => $redirectUri]);
     }
 
     /**
@@ -87,6 +89,10 @@ class LoginController extends BaseController
     {
         $accessTokens = $this->authService->generateAccessTokens($user);
         jwt_auth_set_cookies($accessTokens['access_token'], $accessTokens['refresh_token']);
+
+        if ($request->has('redirect_uri')) {
+            return redirect()->to($request->get('redirect_uri'));
+        }
     }
 
     /**
@@ -139,10 +145,6 @@ class LoginController extends BaseController
 
     public function redirectPath()
     {
-        if (request()->has('redirect_uri')) {
-            return redirect()->to(request()->get('redirect_uri'));
-        }
-
         if (method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }

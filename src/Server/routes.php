@@ -1,12 +1,12 @@
 <?php
 
 Route::group(['middleware' => ['web']], function () {
-    Route::get('client/login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showLoginForm')->name('login');
-    Route::post('client/login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@login')->name('login');
-    Route::get('client/logout', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@logout')->name('logout');
-    Route::get('client/password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showPasswordForm')->name('password.request');
-    Route::post('client/password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@password')->name('password.request');
-    Route::post('client/password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@sendPassword')->name('password.email');
+    Route::get('login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showLoginForm')->name('login');
+    Route::post('login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@login')->name('login');
+    Route::get('logout', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@logout')->name('logout');
+    Route::get('password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showPasswordForm')->name('password.request');
+    Route::post('password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@password')->name('password.request');
+    Route::post('password-mail', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@sendPassword')->name('password.email');
 });
 
 Route::group(['middleware' => ['api']], function () {
