@@ -36,18 +36,13 @@ class AuthController extends BaseController
     public function authorize(Login $request)
     {
         $validated = $request->validated();
-        $redirectUri = $request->get('redirect_uri');
-
+        
         try {
             $user = $this->authService->validateUser($validated['username'], $validated['password']);
 
             $accessTokens = $this->authService->generateAccessTokens($user);
+            return response()->json($accessTokens);
 
-            if ($request->wantsJson() || empty($redirectUri)) {
-                return response()->json($accessTokens);
-            } else {
-                return redirect()->to($redirectUri)->with('token', $accessTokens);
-            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
