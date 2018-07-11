@@ -28,9 +28,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->publishes([$path => config_path('jwt.php')], 'config');
         $this->mergeConfigFrom($path, 'jwt');
 
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'jwt');
+
         if (config('jwt.is_server')) {
             $this->loadRoutesFrom(__DIR__ . '/../Server/routes.php');
-            $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'jwt');
         }
         else {
             $this->loadRoutesFrom(__DIR__ . '/../Client/routes.php');
