@@ -15,7 +15,7 @@ use Musterhaus\LaravelJWTAuth\Server\AuthService;
 class LoginController extends BaseController
 {
 
-    use AuthenticatesUsers, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthenticatesUsers, DispatchesJobs, ValidatesRequests;
 
     private $authService;
 
@@ -56,14 +56,36 @@ class LoginController extends BaseController
      */
     public function login(Request $request)
     {
-        $credentials = $request->only(["email", "password"]);
+        $this->validateLogin($request);
 
-        if ($token = $this->guard()->attempt($credentials, true)) {
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($token = $this->guard()->attempt($this->credentials($request), true)) {
             return $this->sendLoginResponse($request, $token);
         }
 
         $this->incrementLoginAttempts($request);
         return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
     }
 
     /**
@@ -126,30 +148,13 @@ class LoginController extends BaseController
             ->withCookie("jwt_refresh_token");
     }
 
-    public function showPasswordForm()
-    {
-        return view('jwt::passwords.email');
-    }
-
-    public function password(Request $request)
-    {
-        $email = $request->only(["email"]);
-        var_dump($email);
-        exit;
-    }
-
-    public function sendPassword()
-    {
-
-    }
-
     public function redirectPath()
     {
         if (method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }
 
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/user';
     }
 
 }
