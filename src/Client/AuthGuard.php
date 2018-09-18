@@ -63,7 +63,7 @@ class AuthGuard implements Guard
                 $this->user = $user;
 
                 $token_num_of_minutes_until_expire = 60 * 15;
-                $refresh_token_num_of_minutes_until_expire = 60 * 24 * 31; // 1 month
+                $refresh_token_num_of_minutes_until_expire = 60 * 60 * 24 * 31; // 1 month
                 Cookie::queue('jwt_token', $user->getAccessToken(), $token_num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
                 Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $refresh_token_num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
 
