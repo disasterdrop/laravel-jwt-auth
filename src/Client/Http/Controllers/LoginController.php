@@ -9,7 +9,7 @@ class LoginController extends BaseController
 
     public function login()
     {
-        $server_url = config('jwt.auth_server') . '/login?redirect_uri=' . config('app.url');
+        $server_url = config('jwt.auth_server') . '/login?redirect_uri=' . route(config('jwt.login_redirect_route'));
         return redirect()->to($server_url);
     }
 
@@ -21,7 +21,7 @@ class LoginController extends BaseController
 
     public function password()
     {
-        $server_url = config('jwt.auth_server') . '/password?redirect_uri=' . config('app.url');
+        $server_url = config('jwt.auth_server') . '/password?redirect_uri=' . route(config('jwt.password_redirect_route'));
         return redirect()->to($server_url);
     }
 
