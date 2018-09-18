@@ -25,7 +25,8 @@ class Login extends FormRequest
     {
         return [
             'username' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'redirect_uri' => 'sometimes|string'
         ];
     }
 }
