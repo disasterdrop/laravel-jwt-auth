@@ -18,4 +18,6 @@ interface AuthProvider
 
     public function findRefreshTokensByUser(User $user): array;
 
+    public function findCurrentRefreshTokensByUser(User $user, string $refreshToken);
+
 }

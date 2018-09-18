@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * Class User
  * @package Musterhaus\LaravelJWTAuth
  */
-abstract class User implements Authenticatable, \ArrayAccess
+class User implements Authenticatable, \ArrayAccess
 {
 
     /**
@@ -88,6 +88,13 @@ abstract class User implements Authenticatable, \ArrayAccess
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
+    }
+
+    public function __get($name)
+    {
+        if ($this->offsetExists($name)) {
+            return $this->offsetGet($name);
+        }
     }
 
 }

@@ -36,11 +36,27 @@ class RefreshToken implements Token
      * @param string $expires
      * @throws \Exception
      */
-    public function __construct(User $user, string $expires = '+1 year')
+    public function __construct(User $user, string $tokenHash, \DateTimeImmutable $expireDate, $revoked = false)
     {
-        $this->token = $this->generateAccessToken();
-        $this->expires = $this->generateExpires($expires);
         $this->setUser($user);
+        $this->expires = $expireDate;
+        $this->token = $tokenHash;
+        $this->revoked = $revoked;
+    }
+
+    /**
+     * @param User $user
+     * @param string $expireModifier
+     * @throws \Exception
+     */
+    public static function create(User $user, $expireModifier = '+1 year')
+    {
+        $tokenHash = self::generateAccessToken();
+        $today = new \DateTimeImmutable();
+        $expireDate = $today->modify($expireModifier);
+
+        $refreshToken = new self($user, $tokenHash, $expireDate, false);
+        return $refreshToken;
     }
 
     public function getToken()
@@ -82,9 +98,7 @@ class RefreshToken implements Token
      */
     public function revoke()
     {
-        if ($this->revoked === false) {
-            $this->revoked = true;
-        }
+        $this->revoked = true;
     }
 
     /**
@@ -113,22 +127,9 @@ class RefreshToken implements Token
     }
 
     /**
-     * @param $expires
-     * @return \DateTimeImmutable
-     * @throws \Exception
-     */
-    private function generateExpires($expires): \DateTimeImmutable
-    {
-        $today = new \DateTimeImmutable();
-        $this->expires = $today->modify($expires);
-
-        return $this->expires;
-    }
-
-    /**
      * @return bool|string
      */
-    private function generateAccessToken()
+    private static function generateAccessToken()
     {
         if (function_exists('openssl_random_pseudo_bytes')) {
             $randomData = openssl_random_pseudo_bytes(20);

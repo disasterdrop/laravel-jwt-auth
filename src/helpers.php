@@ -17,3 +17,18 @@ if (!function_exists('jwt_auth_remove_cookies')) {
         Cookie::queue('jwt_refresh_token', '', 0, null, config('jwt.cookie_domain'));
     }
 }
+
+if (!function_exists('jwt_get_access_token')) {
+    function jwt_get_access_token()
+    {
+        return Cookie::get('jwt_token');
+    }
+}
+
+if (!function_exists('jwt_get_refresh_token')) {
+    function jwt_get_refresh_token()
+    {
+        return Cookie::get('jwt_refresh_token');
+    }
+}
+
