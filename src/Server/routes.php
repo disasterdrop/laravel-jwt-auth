@@ -4,9 +4,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showLoginForm')->name('login');
     Route::post('login', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@login')->name('login');
     Route::get('logout', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@logout')->name('logout');
-    Route::get('password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@showPasswordForm')->name('password.request');
-    Route::post('password', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@password')->name('password.request');
-    Route::post('password-mail', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\LoginController@sendPassword')->name('password.email');
+
+    Route::get('password/reset', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('password/reset/{token}', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/reset', '\Musterhaus\LaravelJWTAuth\Server\Http\Controllers\ResetPasswordController@reset');
 });
 
 Route::group(['middleware' => ['api']], function () {
