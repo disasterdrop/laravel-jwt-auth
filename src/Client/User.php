@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * Class User
  * @package Musterhaus\LaravelJWTAuth
  */
-class User implements Authenticatable, \ArrayAccess
+abstract class User implements Authenticatable, \ArrayAccess
 {
 
     /**
