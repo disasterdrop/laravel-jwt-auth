@@ -129,14 +129,15 @@ class AuthService
      * @return array
      * @throws \Exception
      */
-    public function generateAccessTokens(User $user): array
+    public function generateAccessTokens(User $user, string $expires = '+15 minutes'): array
     {
-        $jwt = $this->generateTokenForUser($user);
+        $jwt = $this->generateTokenForUser($user, $expires);
         $refreshToken = $this->generateRefreshTokenForUser($user);
 
         return [
             'access_token' => $jwt,
             'refresh_token' => $refreshToken,
+            'expires_in' => 900
         ];
     }
 
