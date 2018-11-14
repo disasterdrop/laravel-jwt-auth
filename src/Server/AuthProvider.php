@@ -16,4 +16,8 @@ interface AuthProvider
 
     public function revokeRefreshToken(RefreshToken $refreshToken);
 
+    public function findRefreshTokensByUser(User $user): array;
+
+    public function findCurrentRefreshTokensByUser(User $user, string $refreshToken);
+
 }

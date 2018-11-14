@@ -12,6 +12,12 @@ interface User
     public function verifyPassword($password): bool;
 
     /**
+     * @param $service
+     * @return bool
+     */
+    public function verifyService($service): bool;
+
+    /**
      * @return string
      */
     public function getIdentifier(): string;

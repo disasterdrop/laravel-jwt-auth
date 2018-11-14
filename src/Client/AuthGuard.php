@@ -48,6 +48,13 @@ class AuthGuard implements Guard
             return $this->user = $this->provider->retrieveById($token);
         }
 
+        if (Cookie::has('jwt_token')) {
+            $token = Cookie::get('jwt_token');
+            if (!empty($token) && $this->provider->getPayload($token)) {
+                return $this->user = $this->provider->retrieveById($token);
+            }
+        }
+
         if (Cookie::has('jwt_refresh_token')) {
             $refreshToken = Cookie::get('jwt_refresh_token');
             $user = $this->provider->retrieveByToken($token, $refreshToken);
@@ -55,9 +62,10 @@ class AuthGuard implements Guard
             if ($user instanceof User) {
                 $this->user = $user;
 
-                $num_of_minutes_until_expire = 60 * 24 * 7; // one week
-                Cookie::queue('jwt_token', $user->getAccessToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
-                Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
+                $token_num_of_minutes_until_expire = 60 * 15;
+                $refresh_token_num_of_minutes_until_expire = 60 * 60 * 24 * 31; // 1 month
+                Cookie::queue('jwt_token', $user->getAccessToken(), $token_num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
+                Cookie::queue('jwt_refresh_token', $user->getRefreshToken(), $refresh_token_num_of_minutes_until_expire, null, config('jwt.cookie_domain'));
 
                 return $this->user;
             }

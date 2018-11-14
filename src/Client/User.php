@@ -85,9 +85,23 @@ abstract class User implements Authenticatable, \ArrayAccess
         $this->data[$offset] = $value;
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if ($this->offsetExists($name)) {
+            return $this->offsetGet($name);
+        }
     }
 
 }

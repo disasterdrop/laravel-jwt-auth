@@ -28,13 +28,17 @@ class AuthServiceProvider extends ServiceProvider
         $this->publishes([$path => config_path('jwt.php')], 'config');
         $this->mergeConfigFrom($path, 'jwt');
 
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'jwt');
+
         if (config('jwt.is_server')) {
-            $this->loadRoutesFrom(__DIR__ . '/../routes.php');
+            $this->loadRoutesFrom(__DIR__ . '/../Server/routes.php');
+        }
+        else {
+            $this->loadRoutesFrom(__DIR__ . '/../Client/routes.php');
         }
 
         Auth::provider('jwt', function ($app, array $config) {
             $publicKey = Storage::get(config('jwt.public_key'));
-
             return new UserProvider($app->make(Repository::class), $publicKey);
         });
 

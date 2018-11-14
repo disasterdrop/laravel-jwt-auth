@@ -48,9 +48,9 @@ class AuthService
      * @return User
      * @throws RefreshTokenRevokedException
      */
-    public function validateUserByRefreshToken(string $refreshToken): User
+    public function validateUserByRefreshToken(string $tokenHash): User
     {
-        $refreshToken = $this->provider->findRefreshToken($refreshToken);
+        $refreshToken = $this->provider->findRefreshToken($tokenHash);
 
         if ($refreshToken->isRevoked()) {
             // refresh token was revoked and is not valid anymore
@@ -65,13 +65,27 @@ class AuthService
         return $user;
     }
 
+    public function getCurrentActiveRefreshTokenForUser(User $user, string $tokenHash)
+    {
+        $refreshTokens = $this->provider->findCurrentRefreshTokensByUser($user, $tokenHash);
+
+        return $refreshTokens;
+    }
+
+    public function getAllCurrentRefreshTokensForUser(User $user)
+    {
+        $refreshTokens = $this->provider->findRefreshTokensByUser($user);
+
+        return $refreshTokens;
+    }
+
     /**
      * @param string $refreshToken
      * @return RefreshToken
      */
-    public function revokeRefreshToken(string $refreshToken): RefreshToken
+    public function revokeRefreshToken(string $tokenHash): RefreshToken
     {
-        $refreshToken = $this->provider->findRefreshToken($refreshToken);
+        $refreshToken = $this->provider->findRefreshToken($tokenHash);
 
         if (!$refreshToken->isRevoked()) {
             $refreshToken->revoke();
@@ -104,7 +118,7 @@ class AuthService
     private function generateRefreshTokenForUser(User $user, string $expires = '+1 year')
     {
         $this->provider->removeOldRefreshTokensForUser($user);
-        $refreshToken = new RefreshToken($user, $expires);
+        $refreshToken = RefreshToken::create($user, $expires);
         $this->provider->saveRefreshToken($refreshToken);
 
         return $refreshToken->getToken();
@@ -115,14 +129,15 @@ class AuthService
      * @return array
      * @throws \Exception
      */
-    public function generateAccessTokens(User $user): array
+    public function generateAccessTokens(User $user, string $expires = '+15 minutes'): array
     {
-        $jwt = $this->generateTokenForUser($user);
+        $jwt = $this->generateTokenForUser($user, $expires);
         $refreshToken = $this->generateRefreshTokenForUser($user);
 
         return [
             'access_token' => $jwt,
             'refresh_token' => $refreshToken,
+            'expires_in' => 900
         ];
     }
 
