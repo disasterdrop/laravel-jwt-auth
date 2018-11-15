@@ -1,6 +1,6 @@
 {
-  "name": "musterhaus/laravel-jwt-auth",
-  "description": "",
+  "name": "disasterdrop/laravel-jwt-auth",
+  "description": "JWT Authentication Server/Client for Laravel",
   "keywords": [
     "laravel",
     "musterhaus",
